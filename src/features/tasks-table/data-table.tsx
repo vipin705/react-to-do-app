@@ -70,8 +70,11 @@ export function DataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className='h-24 text-center'>
-                Start adding your tasks...
+              <TableCell
+                colSpan={columns.length}
+                className='h-24 text-xl tracking-wide text-center'
+              >
+                No tasks available. Start adding your tasks to stay organized!
               </TableCell>
             </TableRow>
           )}

@@ -9,7 +9,7 @@ function AppLayout() {
       </header>
       <Sidebar />
       <main className='bg-gradient-to-b from-gray-100 to-gray-200 px-[4.8rem] pt-[4rem] pb-[6rem] overflow-scroll'>
-        <div className='max-w-[120rem] my-0 mx-auto flex flex-col gap-[3.2rem]'>
+        <div className='max-w-[120rem] my-0 mx-auto flex flex-col gap-[3.2rem] h-full'>
           <Outlet />
         </div>
       </main>

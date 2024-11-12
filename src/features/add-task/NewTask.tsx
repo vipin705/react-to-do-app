@@ -206,7 +206,7 @@ function NewTask({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value='Backlog'>Backlog</SelectItem>
+                          <SelectItem value='backlog'>Backlog</SelectItem>
                           <SelectItem value='in-progress'>
                             In Progress
                           </SelectItem>
