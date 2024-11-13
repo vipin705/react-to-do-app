@@ -1,4 +1,4 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useEffect, useReducer } from 'react';
 import { Task } from '@/modals/task';
 
 type State = {
@@ -6,38 +6,14 @@ type State = {
 };
 
 export type Action =
+  | { type: 'LOAD_TASKS'; payload: Task[] }
   | { type: 'ADD_TASK'; payload: Task }
   | { type: 'EDIT_TASK'; payload: Task }
   | { type: 'REMOVE_TASK'; payload: string }
   | { type: 'CHANGE_STATUS'; payload: { id: string; status: string } };
 
 const initialState: State = {
-  tasks: [
-    {
-      id: 'TSK-1',
-      title: 'Task 1',
-      priority: 'High',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa.',
-      status: 'in progress',
-    },
-    {
-      id: 'TSK-2',
-      title: 'Task 2',
-      priority: 'Medium',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla',
-      status: 'backlog',
-    },
-    {
-      id: 'TSK-3',
-      title: 'Task 3',
-      priority: 'Low',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa',
-      status: 'cancelled',
-    },
-  ],
+  tasks: [],
 };
 
 export const ToDoContext = createContext(
@@ -46,17 +22,32 @@ export const ToDoContext = createContext(
 
 function reducer(state: State, action: Action): State {
   const { type } = action;
+
   switch (type) {
+    case 'LOAD_TASKS':
+      return {
+        ...state,
+        tasks: action.payload,
+      };
     case 'ADD_TASK':
+      localStorage.setItem(
+        'tasks',
+        JSON.stringify([...state.tasks, action.payload])
+      );
       return {
         ...state,
         tasks: [...state.tasks, action.payload],
       };
-    case 'REMOVE_TASK':
+    case 'REMOVE_TASK': {
+      const filteredTasks = state.tasks.filter(
+        (task) => task.id !== action.payload
+      );
+      localStorage.setItem('tasks', JSON.stringify(filteredTasks));
       return {
         ...state,
-        tasks: [...state.tasks.filter((task) => task.id !== action.payload)],
+        tasks: [...filteredTasks],
       };
+    }
     case 'EDIT_TASK': {
       const { status, description, priority, title } = action.payload;
       let task = state.tasks.find((task) => task.id === action.payload.id);
@@ -65,6 +56,7 @@ function reducer(state: State, action: Action): State {
       );
       task = { ...task, status, description, priority, title } as Task;
       state.tasks[index] = task;
+      localStorage.setItem('tasks', JSON.stringify([...state.tasks]));
       return {
         ...state,
         tasks: [...state.tasks],
@@ -77,6 +69,14 @@ function reducer(state: State, action: Action): State {
 
 function ToDoListContext({ children }: { children: React.ReactNode }) {
   const [{ tasks }, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const data = localStorage.getItem('tasks');
+    if (data) {
+      dispatch({ type: 'LOAD_TASKS', payload: JSON.parse(data) });
+    }
+  }, []);
+
   return (
     <ToDoContext.Provider value={{ tasks, dispatch }}>
       {children}

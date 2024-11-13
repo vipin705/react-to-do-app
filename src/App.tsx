@@ -3,6 +3,7 @@ import './App.css';
 import AppLayout from './layout/AppLayout';
 import Tasks from './pages/Tasks';
 import Home from './pages/Home';
+import Analytics from './pages/Analytics';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: '/tasks',
         element: <Tasks />,
+      },
+      {
+        path: '/analytics',
+        element: <Analytics />,
       },
     ],
   },
