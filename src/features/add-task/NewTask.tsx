@@ -78,7 +78,9 @@ function NewTask({
 
   function handleSubmit(data: z.infer<typeof taskFormSchema>) {
     const { title, priority, status, description } = data;
+    console.log(data);
     if (editTask) {
+      const completedAt = status === 'done' ? new Date().toDateString() : '-';
       dispatch({
         type: 'EDIT_TASK',
         payload: {
@@ -87,6 +89,8 @@ function NewTask({
           priority,
           status,
           description,
+          completedAt,
+          createdAt: editTask.createdAt,
         },
       });
     } else {
@@ -98,6 +102,8 @@ function NewTask({
           status,
           priority,
           description,
+          createdAt: new Date().toDateString(),
+          completedAt: '-',
         },
       });
     }

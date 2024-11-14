@@ -7,7 +7,7 @@ function TaskList() {
   const { tasks } = useToDoList();
 
   return (
-    <div className='container mx-auto py-10'>
+    <div className='container mx-auto py-2'>
       <DataTable columns={columns} data={tasks} />
     </div>
   );

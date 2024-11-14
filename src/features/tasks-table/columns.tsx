@@ -40,6 +40,14 @@ export const columns: ColumnDef<Task>[] = [
     header: 'Priority',
   },
   {
+    accessorKey: 'createdAt',
+    header: 'Created on',
+  },
+  {
+    accessorKey: 'completedAt',
+    header: 'Completed at',
+  },
+  {
     id: 'actions',
     cell: ({ row }) => {
       const task = row.original;

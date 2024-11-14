@@ -49,12 +49,21 @@ function reducer(state: State, action: Action): State {
       };
     }
     case 'EDIT_TASK': {
-      const { status, description, priority, title } = action.payload;
+      const { status, description, priority, title, completedAt, createdAt } =
+        action.payload;
       let task = state.tasks.find((task) => task.id === action.payload.id);
       const index = state.tasks.findIndex(
         (task) => task.id === action.payload.id
       );
-      task = { ...task, status, description, priority, title } as Task;
+      task = {
+        ...task,
+        status,
+        description,
+        priority,
+        title,
+        completedAt,
+        createdAt,
+      } as Task;
       state.tasks[index] = task;
       localStorage.setItem('tasks', JSON.stringify([...state.tasks]));
       return {
